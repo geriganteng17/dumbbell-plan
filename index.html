@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d0f14">
+<title>Dumbbell Plan — Bolo</title>
+<style>
+  :root{
+    --bg:#0d0f14; --card:#161a22; --card2:#1d222c;
+    --line:#262d3a; --txt:#eef2f7; --mut:#9aa4b2;
+    --acc:#c6ff3d; --acc2:#7cf03d; --warn:#ff8a5c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg);color:var(--txt);line-height:1.5;
+    padding:0 16px calc(120px + env(safe-area-inset-bottom));
+    max-width:560px;margin:0 auto;
+  }
+  /* HERO */
+  header{padding:28px 0 18px;text-align:center}
+  .kicker{font-size:12px;letter-spacing:3px;color:var(--acc);font-weight:700;text-transform:uppercase}
+  h1{font-size:30px;font-weight:800;margin:6px 0 4px;letter-spacing:-.5px}
+  .sub{color:var(--mut);font-size:14px}
+  .chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+  .chip{background:var(--card);border:1px solid var(--line);border-radius:99px;
+    padding:7px 14px;font-size:12.5px;font-weight:600;color:var(--txt)}
+  .chip b{color:var(--acc)}
+  /* SECTION */
+  .sec-title{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--mut);
+    font-weight:700;margin:26px 4px 12px;display:flex;align-items:center;gap:8px}
+  .sec-title::before{content:"";width:18px;height:2px;background:var(--acc);border-radius:2px}
+  /* WARMUP / COOLDOWN box */
+  .box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px}
+  .box h3{font-size:16px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .box ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+  .box li{font-size:14.5px;color:var(--mut);padding-left:18px;position:relative}
+  .box li::before{content:"›";position:absolute;left:0;color:var(--acc);font-weight:800}
+  /* EXERCISE CARD */
+  .ex{background:var(--card);border:1px solid var(--line);border-radius:20px;
+    padding:18px;margin-bottom:14px;overflow:hidden;position:relative}
+  .ex-top{display:flex;align-items:center;gap:14px}
+  .num{flex:0 0 48px;height:48px;border-radius:14px;
+    background:linear-gradient(135deg,var(--acc),var(--acc2));
+    color:#0d0f14;font-size:22px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .ex-head{flex:1;min-width:0}
+  .ex-name{font-size:18px;font-weight:800;line-height:1.2}
+  .ex-target{font-size:12.5px;color:var(--mut);margin-top:2px}
+  .emoji{font-size:30px}
+  .meta{display:flex;gap:8px;margin:14px 0 4px}
+  .pill{flex:1;background:var(--card2);border-radius:12px;padding:9px;text-align:center}
+  .pill .k{font-size:10.5px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+  .pill .v{font-size:16px;font-weight:800;color:var(--acc);margin-top:1px}
+  .steps{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+  .step{display:flex;gap:10px;font-size:14px}
+  .step .s-n{flex:0 0 20px;height:20px;border-radius:6px;background:var(--card2);
+    color:var(--acc);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .tip{margin-top:12px;background:rgba(255,138,92,.1);border:1px solid rgba(255,138,92,.3);
+    border-radius:12px;padding:10px 12px;font-size:13px;color:var(--warn)}
+  .tip b{color:var(--warn)}
+  .demo{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;
+    background:var(--acc);color:#0d0f14;font-weight:800;font-size:14px;
+    padding:13px;border-radius:14px;text-decoration:none}
+  .demo:active{transform:scale(.98)}
+  /* DAY SPLIT */
+  .split{display:flex;gap:8px;margin-top:10px}
+  .day{flex:1;background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:12px 8px;text-align:center}
+  .day.on{border-color:var(--acc);background:rgba(198,255,61,.08)}
+  .day .d{font-size:12px;font-weight:800}
+  .day .t{font-size:10.5px;color:var(--mut);margin-top:3px}
+  .day.on .t{color:var(--acc)}
+  /* FOOTER pillars */
+  .pillar{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line)}
+  .pillar:first-child{border-top:none}
+  .pillar .ic{font-size:24px}
+  .pillar .pt{font-weight:800;font-size:15px}
+  .pillar .pd{font-size:13px;color:var(--mut);margin-top:2px}
+  .foot{text-align:center;color:var(--mut);font-size:12px;margin:24px 0 8px}
+  /* REST TIMER */
+  .timer-bar{position:fixed;left:0;right:0;bottom:0;z-index:50;
+    background:rgba(13,15,20,.92);backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    display:flex;gap:10px;align-items:center;max-width:560px;margin:0 auto}
+  .timer-display{flex:1;font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;
+    color:var(--acc);text-align:center;letter-spacing:1px}
+  .timer-display small{font-size:12px;color:var(--mut);display:block;letter-spacing:2px;font-weight:600}
+  .tbtn{background:var(--card2);border:1px solid var(--line);color:var(--txt);
+    font-weight:800;font-size:14px;padding:14px 16px;border-radius:14px;cursor:pointer}
+  .tbtn.go{background:var(--acc);color:#0d0f14;border-color:var(--acc)}
+  .tbtn:active{transform:scale(.96)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Program Turun Berat</div>
+  <h1>Dumbbell Plan 💪</h1>
+  <div class="sub">Bolo · 69kg → 63kg · pelan tapi gak balik lagi</div>
+  <div class="chips">
+    <span class="chip"><b>3×</b> / minggu</span>
+    <span class="chip"><b>20–30</b> menit</span>
+    <span class="chip"><b>5–10</b> kg</span>
+    <span class="chip">🌅 Pagi</span>
+  </div>
+</header>
+
+<div class="sec-title">Jadwal Minggu</div>
+<div class="split">
+  <div class="day on"><div class="d">SEN</div><div class="t">Angkat</div></div>
+  <div class="day"><div class="d">SEL</div><div class="t">Jalan</div></div>
+  <div class="day on"><div class="d">RAB</div><div class="t">Angkat</div></div>
+  <div class="day"><div class="d">KAM</div><div class="t">Jalan</div></div>
+  <div class="day on"><div class="d">JUM</div><div class="t">Angkat</div></div>
+  <div class="day"><div class="d">SAB</div><div class="t">Jalan</div></div>
+  <div class="day"><div class="d">MIN</div><div class="t">Rebahan</div></div>
+</div>
+
+<div class="sec-title">Pemanasan · 3 menit</div>
+<div class="box">
+  <h3>🔥 Wajib, jangan skip</h3>
+  <ul>
+    <li>Jumping jack — 30 detik</li>
+    <li>Putar lengan depan-belakang — 20×</li>
+    <li>Squat tanpa beban — 15×</li>
+    <li>Putar pinggang & leher pelan — 20 detik</li>
+  </ul>
+</div>
+
+<div class="sec-title">Latihan Inti · 2–3 putaran</div>
+
+<!-- 1 -->
+<div class="ex">
+  <div class="ex-top">
+    <div class="num">1</div>
+    <div class="ex-head">
+      <div class="ex-name">Goblet Squat</div>
+      <div class="ex-target">Paha + bokong</div>
+    </div>
+    <div class="emoji">🦵</div>
+  </div>
+  <div class="meta">
+    <div class="pill"><div class="k">Reps</div><div class="v">12×</div></div>
+    <div class="pill"><div class="k">Putaran</div><div class="v">2–3</div></div>
+    <div class="pill"><div class="k">Istirahat</div><div class="v">60s</div></div>
+  </div>
+  <div class="steps">
+    <div class="step"><span class="s-n">1</span><span>Peluk 1 dumbbell di depan dada, siku ke bawah.</span></div>
+    <div class="step"><span class="s-n">2</span><span>Kaki selebar bahu, jari kaki agak keluar.</span></div>
+    <div class="step"><span class="s-n">3</span><span>Turun pelan seperti mau duduk, dada tetap tegak.</span></div>
+    <div class="step"><span class="s-n">4</span><span>Dorong lewat tumit untuk berdiri lagi.</span></div>
+  </div>
+  <div class="tip"><b>Hati-hati:</b> lutut jangan jatuh ke dalam, dada jangan nunduk.</div>
+  <a class="demo" target="_blank" href="https://www.youtube.com/results?search_query=goblet+squat+dumbbell+proper+form">▶ Tonton demo gerakan</a>
+</div>
+
+<!-- 2 -->
+<div class="ex">
+  <div class="ex-top">
+    <div class="num">2</div>
+    <div class="ex-head">
+      <div class="ex-name">Romanian Deadlift</div>
+      <div class="ex-target">Hamstring + punggung bawah</div>
+    </div>
+    <div class="emoji">🍑</div>
+  </div>
+  <div class="meta">
+    <div class="pill"><div class="k">Reps</div><div class="v">12×</div></div>
+    <div class="pill"><div class="k">Putaran</div><div class="v">2–3</div></div>
+    <div class="pill"><div class="k">Istirahat</div><div class="v">60s</div></div>
+  </div>
+  <div class="steps">
+    <div class="step"><span class="s-n">1</span><span>Pegang dumbbell di depan paha, lutut sedikit nekuk.</span></div>
+    <div class="step"><span class="s-n">2</span><span>Dorong pinggul ke belakang, badan nunduk pelan.</span></div>
+    <div class="step"><span class="s-n">3</span><span>Punggung <b>tetap lurus</b>, dumbbell turun nyusur kaki.</span></div>
+    <div class="step"><span class="s-n">4</span><span>Rasa ketarik di paha belakang → balik berdiri.</span></div>
+  </div>
+  <div class="tip"><b>Paling gampang salah:</b> JANGAN bungkukin punggung. Mulai beban ringan dulu sampai teknik benar.</div>
+  <a class="demo" target="_blank" href="https://www.youtube.com/results?search_query=dumbbell+romanian+deadlift+form+beginner">▶ Tonton demo gerakan</a>
+</div>
+
+<!-- 3 -->
+<div class="ex">
+  <div class="ex-top">
+    <div class="num">3</div>
+    <div class="ex-head">
+      <div class="ex-name">Floor Press</div>
+      <div class="ex-target">Dada + bahu</div>
+    </div>
+    <div class="emoji">💪</div>
+  </div>
+  <div class="meta">
+    <div class="pill"><div class="k">Reps</div><div class="v">10×</div></div>
+    <div class="pill"><div class="k">Putaran</div><div class="v">2–3</div></div>
+    <div class="pill"><div class="k">Istirahat</div><div class="v">60s</div></div>
+  </div>
+  <div class="steps">
+    <div class="step"><span class="s-n">1</span><span>Telentang di lantai, 1 dumbbell tiap tangan.</span></div>
+    <div class="step"><span class="s-n">2</span><span>Siku nekuk ~45° dari badan, nempel lantai.</span></div>
+    <div class="step"><span class="s-n">3</span><span>Dorong dumbbell ke atas sampai lengan lurus.</span></div>
+    <div class="step"><span class="s-n">4</span><span>Turun pelan sampai siku sentuh lantai.</span></div>
+  </div>
+  <div class="tip"><b>Tips:</b> gerakan terkontrol, jangan dibanting. Pergelangan tangan lurus.</div>
+  <a class="demo" target="_blank" href="https://www.youtube.com/results?search_query=dumbbell+floor+press+form">▶ Tonton demo gerakan</a>
+</div>
+
+<!-- 4 -->
+<div class="ex">
+  <div class="ex-top">
+    <div class="num">4</div>
+    <div class="ex-head">
+      <div class="ex-name">Bent-over Row</div>
+      <div class="ex-target">Punggung + lengan</div>
+    </div>
+    <div class="emoji">🚣</div>
+  </div>
+  <div class="meta">
+    <div class="pill"><div class="k">Reps</div><div class="v">12×</div></div>
+    <div class="pill"><div class="k">Putaran</div><div class="v">2–3</div></div>
+    <div class="pill"><div class="k">Istirahat</div><div class="v">60s</div></div>
+  </div>
+  <div class="steps">
+    <div class="step"><span class="s-n">1</span><span>Badan nunduk ~45°, punggung lurus, lutut sedikit nekuk.</span></div>
+    <div class="step"><span class="s-n">2</span><span>Dumbbell menggantung lurus ke bawah.</span></div>
+    <div class="step"><span class="s-n">3</span><span>Tarik dumbbell ke arah pinggang, siku ke belakang.</span></div>
+    <div class="step"><span class="s-n">4</span><span>Remas tulang belikat, lalu turun pelan.</span></div>
+  </div>
+  <div class="tip"><b>Hati-hati:</b> punggung jaga lurus, jangan tarik pakai ayunan badan.</div>
+  <a class="demo" target="_blank" href="https://www.youtube.com/results?search_query=dumbbell+bent+over+row+form">▶ Tonton demo gerakan</a>
+</div>
+
+<!-- 5 -->
+<div class="ex">
+  <div class="ex-top">
+    <div class="num">5</div>
+    <div class="ex-head">
+      <div class="ex-name">Lunge</div>
+      <div class="ex-target">Kaki + keseimbangan</div>
+    </div>
+    <div class="emoji">🦿</div>
+  </div>
+  <div class="meta">
+    <div class="pill"><div class="k">Reps</div><div class="v">10×/kaki</div></div>
+    <div class="pill"><div class="k">Putaran</div><div class="v">2–3</div></div>
+    <div class="pill"><div class="k">Istirahat</div><div class="v">60s</div></div>
+  </div>
+  <div class="steps">
+    <div class="step"><span class="s-n">1</span><span>Pegang dumbbell di samping badan, berdiri tegak.</span></div>
+    <div class="step"><span class="s-n">2</span><span>Melangkah maju, turun sampai lutut belakang hampir sentuh lantai.</span></div>
+    <div class="step"><span class="s-n">3</span><span>Lutut depan jangan lewat ujung jari kaki.</span></div>
+    <div class="step"><span class="s-n">4</span><span>Dorong balik ke posisi awal, ganti kaki.</span></div>
+  </div>
+  <div class="tip"><b>Tips:</b> kalau goyang, pegangan tembok dulu pakai 1 tangan.</div>
+  <a class="demo" target="_blank" href="https://www.youtube.com/results?search_query=dumbbell+lunge+proper+form">▶ Tonton demo gerakan</a>
+</div>
+
+<!-- 6 -->
+<div class="ex">
+  <div class="ex-top">
+    <div class="num">6</div>
+    <div class="ex-head">
+      <div class="ex-name">Bicep Curl</div>
+      <div class="ex-target">Lengan depan</div>
+    </div>
+    <div class="emoji">💪</div>
+  </div>
+  <div class="meta">
+    <div class="pill"><div class="k">Reps</div><div class="v">12×</div></div>
+    <div class="pill"><div class="k">Putaran</div><div class="v">2–3</div></div>
+    <div class="pill"><div class="k">Istirahat</div><div class="v">60s</div></div>
+  </div>
+  <div class="steps">
+    <div class="step"><span class="s-n">1</span><span>Berdiri tegak, dumbbell di samping, telapak hadap depan.</span></div>
+    <div class="step"><span class="s-n">2</span><span>Angkat dumbbell ke bahu, siku tetap nempel badan.</span></div>
+    <div class="step"><span class="s-n">3</span><span>Remas otot lengan di atas, lalu turun pelan.</span></div>
+  </div>
+  <div class="tip"><b>Tips:</b> jangan ngayun badan. Turunnya pelan = lebih efektif.</div>
+  <a class="demo" target="_blank" href="https://www.youtube.com/results?search_query=dumbbell+bicep+curl+form">▶ Tonton demo gerakan</a>
+</div>
+
+<div class="sec-title">Pendinginan · Penutup</div>
+<div class="box">
+  <h3>🧘 Biar gak pegel besoknya</h3>
+  <ul>
+    <li>Plank — 30 detik × 2</li>
+    <li>Stretch paha & punggung — 20 detik tiap sisi</li>
+    <li>Tarik napas dalam, jalan santai sebentar</li>
+  </ul>
+</div>
+
+<div class="sec-title">Inget — Yang Bikin Turun</div>
+<div class="box">
+  <div class="pillar">
+    <div class="ic">😴</div>
+    <div><div class="pt">Tidur 7 jam</div><div class="pd">Kurang tidur = besok skip jalan ke masjid + ngidam gorengan naik. Ini PALING penting buat lo.</div></div>
+  </div>
+  <div class="pillar">
+    <div class="ic">🚶</div>
+    <div><div class="pt">Jaga 3000+ langkah</div><div class="pd">Pertahankan jalan ke masjid. Tiap 1 jam kerja, berdiri & jalan 2 menit.</div></div>
+  </div>
+  <div class="pillar">
+    <div class="ic">🍗</div>
+    <div><div class="pt">Protein tiap makan, gorengan dijatah</div><div class="pd">Gorengan maks 1–2× seminggu. Nasi secukupnya, jangan nambah. Jangan dipotong ekstrem.</div></div>
+  </div>
+  <div class="pillar">
+    <div class="ic">⚖️</div>
+    <div><div class="pt">Timbang 1× seminggu</div><div class="pd">Pagi abis bangun. Target turun 0.3–0.5 kg/minggu. Jangan timbang harian — bikin stres.</div></div>
+  </div>
+</div>
+
+<div class="foot">Pelan-pelan, Bolo. Konsisten kalah sama cepet. 💚</div>
+
+<!-- REST TIMER -->
+<div class="timer-bar">
+  <button class="tbtn" onclick="setTimer(60)">60s</button>
+  <button class="tbtn" onclick="setTimer(90)">90s</button>
+  <div class="timer-display" id="disp">00:00<small id="lbl">ISTIRAHAT</small></div>
+  <button class="tbtn go" id="ctrl" onclick="toggle()">Start</button>
+</div>
+
+<script>
+  var total=0, left=0, running=false, iv=null;
+  var disp=document.getElementById('disp'), lbl=document.getElementById('lbl'), ctrl=document.getElementById('ctrl');
+  function fmt(s){var m=Math.floor(s/60),x=s%60;return (m<10?'0':'')+m+':'+(x<10?'0':'')+x;}
+  function render(){disp.childNodes[0].nodeValue=fmt(left);}
+  function setTimer(s){total=s;left=s;running=false;clearInterval(iv);ctrl.textContent='Start';lbl.textContent='ISTIRAHAT '+s+'s';render();}
+  function toggle(){
+    if(left<=0){if(total>0){left=total;render();}else return;}
+    if(running){running=false;clearInterval(iv);ctrl.textContent='Lanjut';}
+    else{
+      running=true;ctrl.textContent='Pause';
+      iv=setInterval(function(){
+        left--;render();
+        if(left<=0){clearInterval(iv);running=false;ctrl.textContent='Start';lbl.textContent='SELESAI! 💪';
+          if(navigator.vibrate)navigator.vibrate([200,100,200]);}
+      },1000);
+    }
+  }
+  setTimer(60);
+</script>
+</body>
+</html>
